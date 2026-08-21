@@ -21,6 +21,13 @@ export function AuthProvider({ children }) {
       setUser(JSON.parse(cachedUser))
     }
 
+    // Dev preview sessions aren't real — don't try to validate them
+    // against a backend that doesn't exist yet.
+    if (token === 'dev-preview-token') {
+      setLoading(false)
+      return
+    }
+
     authService
       .fetchCurrentUser()
       .then((freshUser) => {
@@ -57,8 +64,24 @@ export function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
+  // TEMPORARY — Phase 2 only. Lets you preview role dashboards before the
+  // Django backend (Phase 3) exists. No network call, no real token.
+  // Remove this once real login (Phase 3/4) is wired up.
+  const devPreviewLogin = useCallback((role) => {
+    const mockUser = {
+      id: 0,
+      full_name: role === 'patient' ? 'Preview Patient' : role === 'caregiver' ? 'Preview Caregiver' : 'Preview Admin',
+      email: `preview-${role}@medai.dev`,
+      role,
+    }
+    localStorage.setItem('medai_token', 'dev-preview-token')
+    localStorage.setItem('medai_user', JSON.stringify(mockUser))
+    setUser(mockUser)
+    return mockUser
+  }, [])
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, devPreviewLogin }}>
       {children}
     </AuthContext.Provider>
   )
