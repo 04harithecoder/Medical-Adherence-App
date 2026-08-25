@@ -41,30 +41,47 @@ export default function Register() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg px-4 py-10">
-      <Card className="w-full max-w-sm">
+      <Card className="w-full max-w-sm p-7">
         <div className="mb-6 text-center">
-          <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg
-            bg-primary font-display text-base font-semibold text-accent">M</span>
-          <h1 className="mt-4 font-display text-2xl text-primary">Create your account</h1>
-          <p className="mt-1 text-sm text-primary/60">Join MEDAI in a couple of minutes</p>
+          <span className="skeuo-medallion mx-auto flex h-12 w-12 items-center justify-center rounded-2xl font-display text-lg font-bold text-accent">
+            M
+          </span>
+          <h1
+            className="mt-4 font-display text-2xl font-bold text-primary"
+            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)' }}
+          >
+            Create your account
+          </h1>
+          <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-primary/60" style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.7)' }}>
+            Join MEDAI in a couple of minutes
+          </p>
         </div>
 
-        <div className="mb-5 grid grid-cols-2 gap-2">
-          {roles.map((r) => (
-            <button
-              key={r.value}
-              type="button"
-              onClick={() => setValue('role', r.value)}
-              className={`rounded-lg border px-3 py-2.5 text-left text-sm transition-colors ${
-                selectedRole === r.value
-                  ? 'border-accent bg-accent/10 text-primary'
-                  : 'border-primary/15 text-primary/60 hover:border-primary/30'
-              }`}
-            >
-              <span className="block font-semibold">{r.label}</span>
-              <span className="block text-xs text-primary/50">{r.hint}</span>
-            </button>
-          ))}
+        {/* Tactile Rocker Switch / Segmented Control */}
+        <div className="skeuo-well mb-5 grid grid-cols-2 gap-1.5 rounded-2xl p-1.5 shadow-inner">
+          {roles.map((r) => {
+            const isSelected = selectedRole === r.value
+            return (
+              <button
+                key={r.value}
+                type="button"
+                onClick={() => setValue('role', r.value)}
+                className={`rounded-xl px-3 py-2.5 text-left transition-all select-none cursor-pointer ${
+                  isSelected
+                    ? 'skeuo-btn-outline !border-accent/60 !shadow-md font-bold'
+                    : 'text-primary/60 hover:text-primary active:translate-y-0.5'
+                }`}
+              >
+                <span
+                  className={`block text-xs font-bold ${isSelected ? 'text-primary' : 'text-primary/70'}`}
+                  style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.8)' }}
+                >
+                  {r.label}
+                </span>
+                <span className="block text-[10px] font-medium text-primary/50">{r.hint}</span>
+              </button>
+            )
+          })}
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
@@ -109,16 +126,20 @@ export default function Register() {
             })}
           />
 
-          {serverError && <p className="text-sm font-medium text-accent">{serverError}</p>}
+          {serverError && (
+            <p className="text-xs font-bold text-accent" style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.7)' }}>
+              {serverError}
+            </p>
+          )}
 
-          <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
+          <Button type="submit" disabled={isSubmitting} className="mt-2 w-full font-bold">
             {isSubmitting ? 'Creating account…' : 'Create account'}
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-primary/60">
+        <p className="mt-6 text-center text-xs font-semibold text-primary/70">
           Already have an account?{' '}
-          <Link to="/login" className="font-semibold text-accent">
+          <Link to="/login" className="font-bold text-accent hover:underline">
             Log in
           </Link>
         </p>
@@ -126,3 +147,4 @@ export default function Register() {
     </div>
   )
 }
+

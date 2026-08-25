@@ -3,7 +3,7 @@
 /*
   MEDAI design tokens.
   Strict rule: only these four colors are used anywhere in the product.
-  Every "extra" shade below is a tint/shade/opacity of one of the four —
+  Every extra shade below is a tint/shade/opacity/depth of one of the four —
   never a new hue.
 */
 @theme {
@@ -23,16 +23,22 @@
 
   body {
     background-color: var(--color-bg);
+    background-image: 
+      radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.7) 0%, transparent 60%),
+      radial-gradient(circle at 85% 85%, rgba(52, 79, 31, 0.03) 0%, transparent 60%);
+    background-attachment: fixed;
     color: var(--color-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     color: var(--color-primary);
     letter-spacing: -0.01em;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
   /* Visible keyboard focus everywhere -- accessibility floor */
@@ -49,3 +55,268 @@
     }
   }
 }
+
+/* ==========================================================================
+   Skeuomorphic Realism & Tactile Lighting System (MEDAI 4-Color Strict)
+   ========================================================================== */
+
+/* Raised Tactile Plaque / Card */
+.skeuo-card {
+  background: linear-gradient(180deg, #faf6ed 0%, #f2ead3 100%);
+  border: 1px solid rgba(52, 79, 31, 0.12);
+  border-top-color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+    0 -2px 0 0 rgba(52, 79, 31, 0.08) inset,
+    0 2px 4px 0 rgba(52, 79, 31, 0.03),
+    0 8px 20px -2px rgba(52, 79, 31, 0.08),
+    0 1px 2px 0 rgba(52, 79, 31, 0.06);
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.skeuo-card:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 1) inset,
+    0 -2px 0 0 rgba(52, 79, 31, 0.09) inset,
+    0 3px 6px 0 rgba(52, 79, 31, 0.04),
+    0 12px 28px -4px rgba(52, 79, 31, 0.11),
+    0 2px 4px 0 rgba(52, 79, 31, 0.07);
+}
+
+/* Recessed Inset Chamber / Well (Countersunk for inputs, dials, stats) */
+.skeuo-well {
+  background: linear-gradient(180deg, rgba(52, 79, 31, 0.06) 0%, rgba(255, 255, 255, 0.3) 100%), #ede4cd;
+  border: 1px solid rgba(52, 79, 31, 0.14);
+  border-bottom-color: rgba(255, 255, 255, 0.8);
+  box-shadow:
+    inset 0 2px 5px 0 rgba(52, 79, 31, 0.12),
+    inset 0 1px 2px 0 rgba(52, 79, 31, 0.08),
+    0 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Tactile 3D Primary Push Button (Amber) */
+.skeuo-btn-primary {
+  background: linear-gradient(180deg, #fba834 0%, #f4991a 50%, #db840e 100%);
+  border: 1px solid #c97507;
+  border-top-color: #ffd285;
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 0 0 rgba(140, 70, 0, 0.4),
+    0 3px 6px 0 rgba(244, 153, 26, 0.35),
+    0 1px 2px 0 rgba(52, 79, 31, 0.15);
+  transition: all 0.12s ease-in-out;
+  cursor: pointer;
+}
+
+.skeuo-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fdb653 0%, #fa9f24 50%, #e28a11 100%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.65),
+    inset 0 -2px 0 0 rgba(140, 70, 0, 0.45),
+    0 5px 12px 0 rgba(244, 153, 26, 0.45),
+    0 2px 4px 0 rgba(52, 79, 31, 0.2);
+  transform: translateY(-1px);
+}
+
+.skeuo-btn-primary:active:not(:disabled) {
+  background: linear-gradient(180deg, #db840e 0%, #f4991a 100%);
+  box-shadow:
+    inset 0 3px 5px 0 rgba(100, 45, 0, 0.5),
+    0 1px 0 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(1.5px);
+}
+
+.skeuo-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Tactile 3D Secondary Push Button (Forest Green) */
+.skeuo-btn-secondary {
+  background: linear-gradient(180deg, #446829 0%, #344f1f 50%, #263a16 100%);
+  border: 1px solid #1f3013;
+  border-top-color: #63923f;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 0 rgba(10, 20, 5, 0.6),
+    0 3px 6px 0 rgba(52, 79, 31, 0.25),
+    0 1px 2px 0 rgba(52, 79, 31, 0.15);
+  transition: all 0.12s ease-in-out;
+  cursor: pointer;
+}
+
+.skeuo-btn-secondary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #4d762e 0%, #3a5723 50%, #2b4119 100%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 0 0 rgba(10, 20, 5, 0.65),
+    0 5px 12px 0 rgba(52, 79, 31, 0.35),
+    0 2px 4px 0 rgba(52, 79, 31, 0.2);
+  transform: translateY(-1px);
+}
+
+.skeuo-btn-secondary:active:not(:disabled) {
+  background: linear-gradient(180deg, #263a16 0%, #344f1f 100%);
+  box-shadow:
+    inset 0 3px 5px 0 rgba(0, 0, 0, 0.6),
+    0 1px 0 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(1.5px);
+}
+
+.skeuo-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Tactile 3D Light Outline Button (Parchment Pressed Plate) */
+.skeuo-btn-outline {
+  background: linear-gradient(180deg, #ffffff 0%, #f4edd9 100%);
+  border: 1px solid rgba(52, 79, 31, 0.2);
+  border-top-color: rgba(255, 255, 255, 1);
+  color: var(--color-primary);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 1px 0 0 #ffffff,
+    inset 0 -1px 0 0 rgba(52, 79, 31, 0.1),
+    0 2px 4px 0 rgba(52, 79, 31, 0.06),
+    0 1px 2px 0 rgba(52, 79, 31, 0.04);
+  transition: all 0.12s ease-in-out;
+  cursor: pointer;
+}
+
+.skeuo-btn-outline:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffffff 0%, #faeed7 100%);
+  border-color: rgba(52, 79, 31, 0.3);
+  box-shadow:
+    inset 0 1px 0 0 #ffffff,
+    0 4px 8px 0 rgba(52, 79, 31, 0.09),
+    0 1px 2px 0 rgba(52, 79, 31, 0.05);
+  transform: translateY(-1px);
+}
+
+.skeuo-btn-outline:active:not(:disabled) {
+  background: linear-gradient(180deg, #e8ddc4 0%, #f4eed9 100%);
+  box-shadow:
+    inset 0 2px 4px 0 rgba(52, 79, 31, 0.15),
+    0 1px 0 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(1.5px);
+}
+
+.skeuo-btn-outline:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Ghost Button with subtle press tactile feel */
+.skeuo-btn-ghost {
+  color: var(--color-primary);
+  transition: all 0.12s ease-in-out;
+  cursor: pointer;
+}
+
+.skeuo-btn-ghost:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(52, 79, 31, 0.05) 100%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.8),
+    0 1px 3px 0 rgba(52, 79, 31, 0.05);
+}
+
+.skeuo-btn-ghost:active:not(:disabled) {
+  background: rgba(52, 79, 31, 0.08);
+  box-shadow: inset 0 2px 4px 0 rgba(52, 79, 31, 0.1);
+  transform: translateY(1px);
+}
+
+/* Debossed Physical Input Field */
+.skeuo-input {
+  background: linear-gradient(180deg, #f4efe2 0%, #ffffff 40%, #ffffff 100%);
+  border: 1px solid rgba(52, 79, 31, 0.2);
+  border-top-color: rgba(52, 79, 31, 0.35);
+  border-bottom-color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 2px 4px 0 rgba(52, 79, 31, 0.12),
+    inset 0 1px 2px 0 rgba(52, 79, 31, 0.08),
+    0 1px 0 0 rgba(255, 255, 255, 0.85);
+  color: var(--color-primary);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.skeuo-input:focus {
+  background: #ffffff;
+  border-color: #f4991a;
+  border-top-color: #db840e;
+  box-shadow:
+    inset 0 2px 4px 0 rgba(244, 153, 26, 0.12),
+    0 0 0 3px rgba(244, 153, 26, 0.25),
+    0 1px 0 0 rgba(255, 255, 255, 0.9);
+  outline: none;
+}
+
+.skeuo-input-error {
+  border-color: #f4991a !important;
+  border-top-color: #c97507 !important;
+  box-shadow:
+    inset 0 2px 4px 0 rgba(244, 153, 26, 0.2),
+    0 0 0 2px rgba(244, 153, 26, 0.3) !important;
+}
+
+/* Tactile Enamel Badge / Pill */
+.skeuo-badge {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px 0 rgba(52, 79, 31, 0.08);
+  border: 1px solid rgba(52, 79, 31, 0.12);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* Stamped Emblem / Medallion (e.g. Logo 'M') */
+.skeuo-medallion {
+  background: linear-gradient(145deg, #3f5f26 0%, #344f1f 60%, #243715 100%);
+  border: 1px solid #1f3013;
+  border-top-color: #63923f;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 0 0 rgba(10, 20, 5, 0.7),
+    0 4px 8px 0 rgba(52, 79, 31, 0.25),
+    0 1px 2px 0 rgba(52, 79, 31, 0.15);
+}
+
+/* Physical Grooves & Separators */
+.skeuo-groove-h {
+  height: 2px;
+  border-top: 1px solid rgba(52, 79, 31, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.85);
+}
+
+.skeuo-groove-v {
+  width: 2px;
+  border-left: 1px solid rgba(52, 79, 31, 0.12);
+  border-right: 1px solid rgba(255, 255, 255, 0.85);
+}
+
+/* Tactile Chronometer Gauge Face Bezel */
+.skeuo-gauge-bezel {
+  background: linear-gradient(145deg, #faf6ed 0%, #ebdcb8 100%);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.9) inset,
+    0 -2px 0 0 rgba(52, 79, 31, 0.12) inset,
+    0 6px 16px -2px rgba(52, 79, 31, 0.12),
+    0 2px 4px 0 rgba(52, 79, 31, 0.08);
+}
+
+.skeuo-gauge-inner {
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f4ecda 70%, #e9dec3 100%);
+  box-shadow:
+    inset 0 3px 6px 0 rgba(52, 79, 31, 0.16),
+    inset 0 1px 2px 0 rgba(52, 79, 31, 0.1),
+    0 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+

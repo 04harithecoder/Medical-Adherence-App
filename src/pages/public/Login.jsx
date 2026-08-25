@@ -40,13 +40,21 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg px-4">
-      <Card className="w-full max-w-sm">
+    <div className="flex min-h-screen items-center justify-center bg-bg px-4 py-10">
+      <Card className="w-full max-w-sm p-7">
         <div className="mb-6 text-center">
-          <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg
-            bg-primary font-display text-base font-semibold text-accent">M</span>
-          <h1 className="mt-4 font-display text-2xl text-primary">Welcome back</h1>
-          <p className="mt-1 text-sm text-primary/60">Log in to your MEDAI account</p>
+          <span className="skeuo-medallion mx-auto flex h-12 w-12 items-center justify-center rounded-2xl font-display text-lg font-bold text-accent">
+            M
+          </span>
+          <h1
+            className="mt-4 font-display text-2xl font-bold text-primary"
+            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)' }}
+          >
+            Welcome back
+          </h1>
+          <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-primary/60" style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.7)' }}>
+            Log in to your MEDAI account
+          </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
@@ -67,33 +75,41 @@ export default function Login() {
             {...register('password', { required: 'Password is required' })}
           />
 
-          {serverError && <p className="text-sm font-medium text-accent">{serverError}</p>}
+          {serverError && (
+            <p className="text-xs font-bold text-accent" style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.7)' }}>
+              {serverError}
+            </p>
+          )}
 
-          <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
+          <Button type="submit" disabled={isSubmitting} className="mt-2 w-full font-bold">
             {isSubmitting ? 'Logging in…' : 'Log in'}
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-primary/60">
+        <p className="mt-6 text-center text-xs font-semibold text-primary/70">
           New to MEDAI?{' '}
-          <Link to="/register" className="font-semibold text-accent">
+          <Link to="/register" className="font-bold text-accent hover:underline">
             Create an account
           </Link>
         </p>
 
         {SHOW_DEV_PREVIEW && (
-          <div className="mt-6 border-t border-dashed border-primary/20 pt-5">
-            <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-primary/40">
+          <div className="mt-6 pt-5">
+            <div className="skeuo-groove-h mb-4" />
+            <p
+              className="mb-3 text-center text-[10px] font-bold uppercase tracking-wider text-primary/50"
+              style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.8)' }}
+            >
               Dev preview (no backend yet)
             </p>
             <div className="grid grid-cols-3 gap-2">
-              <Button variant="outline" className="px-2 py-2 text-xs" onClick={() => handlePreview('patient')}>
+              <Button variant="outline" className="px-2 py-1.5 text-xs font-bold" onClick={() => handlePreview('patient')}>
                 Patient
               </Button>
-              <Button variant="outline" className="px-2 py-2 text-xs" onClick={() => handlePreview('caregiver')}>
+              <Button variant="outline" className="px-2 py-1.5 text-xs font-bold" onClick={() => handlePreview('caregiver')}>
                 Caregiver
               </Button>
-              <Button variant="outline" className="px-2 py-2 text-xs" onClick={() => handlePreview('admin')}>
+              <Button variant="outline" className="px-2 py-1.5 text-xs font-bold" onClick={() => handlePreview('admin')}>
                 Admin
               </Button>
             </div>
@@ -103,3 +119,4 @@ export default function Login() {
     </div>
   )
 }
+

@@ -24,14 +24,21 @@ export default function PatientDashboard() {
   const adherence = Math.round((taken / todayDoses.length) * 100)
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 max-w-7xl mx-auto">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-2xl text-primary">Your day at a glance</h2>
-        <Button as={Link} to="/patient/medications">+ Add medication</Button>
+        <h2
+          className="font-display text-2xl font-bold text-primary"
+          style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)' }}
+        >
+          Your day at a glance
+        </h2>
+        <Button as={Link} to="/patient/medications" className="font-bold">
+          + Add medication
+        </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card className="flex items-center justify-center md:col-span-1">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="flex items-center justify-center p-4 lg:col-span-1">
           <AdherenceRing percentage={adherence} />
         </Card>
         <StatCard label="Doses taken today" value={taken} hint={`of ${todayDoses.length} scheduled`} />
@@ -39,23 +46,40 @@ export default function PatientDashboard() {
         <StatCard label="Adherence status" value="Low risk" hint="Based on the last 14 days" />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="flex flex-col gap-3 md:col-span-2">
-          <h3 className="font-display text-lg text-primary">Today's medications</h3>
-          {todayDoses.map((dose) => (
-            <UpcomingDoseCard key={dose.id} dose={dose} />
-          ))}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="flex flex-col gap-3 lg:col-span-2">
+          <h3
+            className="font-display text-lg font-bold text-primary"
+            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)' }}
+          >
+            Today's medications
+          </h3>
+          <div className="flex flex-col gap-3">
+            {todayDoses.map((dose) => (
+              <UpcomingDoseCard key={dose.id} dose={dose} />
+            ))}
+          </div>
         </div>
 
         <div className="flex flex-col gap-3">
-          <h3 className="font-display text-lg text-primary">Recent alerts</h3>
+          <h3
+            className="font-display text-lg font-bold text-primary"
+            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)' }}
+          >
+            Recent alerts
+          </h3>
           {recentAlerts.length === 0 ? (
-            <Card className="text-sm text-primary/50">No alerts right now.</Card>
+            <Card className="text-sm font-medium text-primary/50">No alerts right now.</Card>
           ) : (
             recentAlerts.map((alert) => (
-              <Card key={alert.id} className="flex items-start gap-2">
-                <Badge variant="moderate">Pattern</Badge>
-                <p className="text-sm text-primary/70">{alert.text}</p>
+              <Card key={alert.id} className="flex items-start gap-3 transition-transform hover:-translate-y-0.5">
+                <Badge variant="moderate" className="mt-0.5">Pattern</Badge>
+                <p
+                  className="text-sm font-medium leading-snug text-primary/80"
+                  style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.6)' }}
+                >
+                  {alert.text}
+                </p>
               </Card>
             ))
           )}
@@ -64,3 +88,4 @@ export default function PatientDashboard() {
     </div>
   )
 }
+

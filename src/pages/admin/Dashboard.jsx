@@ -10,9 +10,14 @@ const stats = [
 
 export default function AdminDashboard() {
   return (
-    <div className="flex flex-col gap-6">
-      <h2 className="font-display text-2xl text-primary">System overview</h2>
-      <div className="grid gap-4 md:grid-cols-4">
+    <div className="flex flex-col gap-6 max-w-7xl mx-auto">
+      <h2
+        className="font-display text-2xl font-bold text-primary"
+        style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)' }}
+      >
+        System overview
+      </h2>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
           <StatCard key={s.label} label={s.label} value={s.value} />
         ))}
@@ -20,3 +25,4 @@ export default function AdminDashboard() {
     </div>
   )
 }
+
