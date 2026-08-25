@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import Button from '../../components/common/Button'
 import Card from '../../components/common/Card'
+import ThemeSwitch from '../../components/common/ThemeSwitch'
 
 const days = [
   { label: 'M', status: 'taken' },
@@ -38,7 +39,7 @@ const capabilities = [
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-bg transition-colors duration-200">
       <header className="flex items-center justify-between px-6 py-6 md:px-12">
         <div className="flex items-center gap-3">
           <span className="skeuo-medallion flex h-10 w-10 items-center justify-center rounded-xl font-display text-base font-bold text-accent">
@@ -46,16 +47,17 @@ export default function Landing() {
           </span>
           <span
             className="font-display text-2xl font-bold tracking-tight text-primary"
-            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)' }}
+            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.6)' }}
           >
             MEDAI
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          <ThemeSwitch />
           <Link
             to="/login"
             className="rounded-xl px-3.5 py-2 text-sm font-bold text-primary/80 transition-colors hover:text-primary"
-            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.8)' }}
+            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.5)' }}
           >
             Log in
           </Link>
@@ -64,6 +66,7 @@ export default function Landing() {
           </Button>
         </div>
       </header>
+
 
       <section className="grid gap-12 px-6 py-12 md:grid-cols-2 md:items-center md:px-12 md:py-20">
         <div>

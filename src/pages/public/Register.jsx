@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/useAuth'
 import Input from '../../components/common/Input'
 import Button from '../../components/common/Button'
 import Card from '../../components/common/Card'
+import ThemeSwitch from '../../components/common/ThemeSwitch'
 
 const roles = [
   { value: 'patient', label: 'Patient', hint: 'Track your own medications' },
@@ -40,8 +41,12 @@ export default function Register() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg px-4 py-10">
+    <div className="flex min-h-screen items-center justify-center bg-bg px-4 py-10 relative transition-colors duration-200">
+      <div className="absolute top-5 right-5">
+        <ThemeSwitch />
+      </div>
       <Card className="w-full max-w-sm p-7">
+
         <div className="mb-6 text-center">
           <span className="skeuo-medallion mx-auto flex h-12 w-12 items-center justify-center rounded-2xl font-display text-lg font-bold text-accent">
             M

@@ -2,15 +2,40 @@
 
 /*
   MEDAI design tokens.
-  Strict rule: only these four colors are used anywhere in the product.
-  Every extra shade below is a tint/shade/opacity/depth of one of the four —
-  never a new hue.
+  Light theme (Original):
+    --color-bg: #f9f5f0
+    --color-surface: #f2ead3
+    --color-accent: #f4991a
+    --color-primary: #344f1f
+
+  Dark theme (User specified):
+    --color-bg: #32012F      (Deep plum obsidian)
+    --color-surface: #524C42 (Dark slate charcoal)
+    --color-accent: #F97300  (Electric tangerine orange)
+    --color-primary: #E2DFD0 (Warm parchment cream)
 */
+:root {
+  --color-bg: #f9f5f0;
+  --color-surface: #f2ead3;
+  --color-accent: #f4991a;
+  --color-primary: #344f1f;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark, [data-theme="dark"] {
+  --color-bg: #32012F;
+  --color-surface: #524C42;
+  --color-accent: #F97300;
+  --color-primary: #E2DFD0;
+}
+
 @theme {
-  --color-bg: #f9f5f0;       /* app background */
-  --color-surface: #f2ead3;  /* cards, sidebar, table rows */
-  --color-accent: #f4991a;   /* primary actions, taken/positive states */
-  --color-primary: #344f1f;  /* headings, nav, dark UI, text */
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-accent: var(--color-accent);
+  --color-primary: var(--color-primary);
 
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
@@ -18,7 +43,7 @@
 
 @layer base {
   html {
-    color-scheme: light;
+    color-scheme: light dark;
   }
 
   body {
@@ -32,6 +57,13 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     min-height: 100vh;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .dark body {
+    background-image: 
+      radial-gradient(circle at 15% 15%, rgba(249, 115, 0, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 85% 85%, rgba(82, 76, 66, 0.2) 0%, transparent 60%);
   }
 
   h1, h2, h3, h4 {
@@ -41,7 +73,11 @@
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
   }
 
-  /* Visible keyboard focus everywhere -- accessibility floor */
+  .dark h1, .dark h2, .dark h3, .dark h4 {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Visible keyboard focus everywhere */
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
@@ -57,7 +93,7 @@
 }
 
 /* ==========================================================================
-   Skeuomorphic Realism & Tactile Lighting System (MEDAI 4-Color Strict)
+   Skeuomorphic Realism & Tactile Lighting System (Light + Dark Modes)
    ========================================================================== */
 
 /* Raised Tactile Plaque / Card */
@@ -72,7 +108,7 @@
     0 8px 20px -2px rgba(52, 79, 31, 0.08),
     0 1px 2px 0 rgba(52, 79, 31, 0.06);
   position: relative;
-  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.25s ease;
 }
 
 .skeuo-card:hover {
@@ -84,6 +120,27 @@
     0 2px 4px 0 rgba(52, 79, 31, 0.07);
 }
 
+.dark .skeuo-card {
+  background: linear-gradient(180deg, #5b554b 0%, #524c42 100%);
+  border: 1px solid rgba(226, 223, 208, 0.12);
+  border-top-color: rgba(226, 223, 208, 0.28);
+  box-shadow:
+    0 1px 0 0 rgba(226, 223, 208, 0.18) inset,
+    0 -2px 0 0 rgba(0, 0, 0, 0.45) inset,
+    0 2px 4px 0 rgba(0, 0, 0, 0.3),
+    0 10px 24px -2px rgba(0, 0, 0, 0.5),
+    0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.dark .skeuo-card:hover {
+  box-shadow:
+    0 1px 0 0 rgba(226, 223, 208, 0.25) inset,
+    0 -2px 0 0 rgba(0, 0, 0, 0.5) inset,
+    0 3px 8px 0 rgba(0, 0, 0, 0.4),
+    0 14px 30px -4px rgba(0, 0, 0, 0.6),
+    0 2px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
 /* Recessed Inset Chamber / Well (Countersunk for inputs, dials, stats) */
 .skeuo-well {
   background: linear-gradient(180deg, rgba(52, 79, 31, 0.06) 0%, rgba(255, 255, 255, 0.3) 100%), #ede4cd;
@@ -93,9 +150,20 @@
     inset 0 2px 5px 0 rgba(52, 79, 31, 0.12),
     inset 0 1px 2px 0 rgba(52, 79, 31, 0.08),
     0 1px 0 0 rgba(255, 255, 255, 0.9);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Tactile 3D Primary Push Button (Amber) */
+.dark .skeuo-well {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(226, 223, 208, 0.03) 100%), #423d34;
+  border: 1px solid rgba(0, 0, 0, 0.55);
+  border-bottom-color: rgba(226, 223, 208, 0.15);
+  box-shadow:
+    inset 0 2px 5px 0 rgba(0, 0, 0, 0.65),
+    inset 0 1px 2px 0 rgba(0, 0, 0, 0.4),
+    0 1px 0 0 rgba(226, 223, 208, 0.1);
+}
+
+/* Tactile 3D Primary Push Button (Amber / Electric Orange) */
 .skeuo-btn-primary {
   background: linear-gradient(180deg, #fba834 0%, #f4991a 50%, #db840e 100%);
   border: 1px solid #c97507;
@@ -111,6 +179,17 @@
   cursor: pointer;
 }
 
+.dark .skeuo-btn-primary {
+  background: linear-gradient(180deg, #ff8c26 0%, #f97300 50%, #d45e00 100%);
+  border: 1px solid #b34a00;
+  border-top-color: #ffa85c;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 0 0 rgba(100, 30, 0, 0.55),
+    0 4px 10px 0 rgba(249, 115, 0, 0.4),
+    0 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
 .skeuo-btn-primary:hover:not(:disabled) {
   background: linear-gradient(180deg, #fdb653 0%, #fa9f24 50%, #e28a11 100%);
   box-shadow:
@@ -121,6 +200,15 @@
   transform: translateY(-1px);
 }
 
+.dark .skeuo-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffa047 0%, #fa8014 50%, #e26702 100%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2px 0 0 rgba(100, 30, 0, 0.6),
+    0 6px 14px 0 rgba(249, 115, 0, 0.5),
+    0 2px 4px 0 rgba(0, 0, 0, 0.4);
+}
+
 .skeuo-btn-primary:active:not(:disabled) {
   background: linear-gradient(180deg, #db840e 0%, #f4991a 100%);
   box-shadow:
@@ -129,13 +217,20 @@
   transform: translateY(1.5px);
 }
 
+.dark .skeuo-btn-primary:active:not(:disabled) {
+  background: linear-gradient(180deg, #d45e00 0%, #f97300 100%);
+  box-shadow:
+    inset 0 3px 5px 0 rgba(90, 25, 0, 0.65),
+    0 1px 0 0 rgba(255, 255, 255, 0.3);
+}
+
 .skeuo-btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
 }
 
-/* Tactile 3D Secondary Push Button (Forest Green) */
+/* Tactile 3D Secondary Push Button */
 .skeuo-btn-secondary {
   background: linear-gradient(180deg, #446829 0%, #344f1f 50%, #263a16 100%);
   border: 1px solid #1f3013;
@@ -151,6 +246,17 @@
   cursor: pointer;
 }
 
+.dark .skeuo-btn-secondary {
+  background: linear-gradient(180deg, #4d1549 0%, #32012F 60%, #20001e 100%);
+  border: 1px solid #1f001d;
+  border-top-color: #72246d;
+  box-shadow:
+    inset 0 1px 0 0 rgba(226, 223, 208, 0.25),
+    inset 0 -2px 0 0 rgba(0, 0, 0, 0.7),
+    0 3px 8px 0 rgba(0, 0, 0, 0.4),
+    0 1px 2px 0 rgba(0, 0, 0, 0.25);
+}
+
 .skeuo-btn-secondary:hover:not(:disabled) {
   background: linear-gradient(180deg, #4d762e 0%, #3a5723 50%, #2b4119 100%);
   box-shadow:
@@ -161,6 +267,15 @@
   transform: translateY(-1px);
 }
 
+.dark .skeuo-btn-secondary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #5d1c58 0%, #3d0339 60%, #290126 100%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(226, 223, 208, 0.35),
+    inset 0 -2px 0 0 rgba(0, 0, 0, 0.75),
+    0 5px 12px 0 rgba(0, 0, 0, 0.5),
+    0 2px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
 .skeuo-btn-secondary:active:not(:disabled) {
   background: linear-gradient(180deg, #263a16 0%, #344f1f 100%);
   box-shadow:
@@ -169,12 +284,19 @@
   transform: translateY(1.5px);
 }
 
+.dark .skeuo-btn-secondary:active:not(:disabled) {
+  background: linear-gradient(180deg, #1f001d 0%, #32012F 100%);
+  box-shadow:
+    inset 0 3px 5px 0 rgba(0, 0, 0, 0.8),
+    0 1px 0 0 rgba(226, 223, 208, 0.2);
+}
+
 .skeuo-btn-secondary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* Tactile 3D Light Outline Button (Parchment Pressed Plate) */
+/* Tactile 3D Light Outline Button */
 .skeuo-btn-outline {
   background: linear-gradient(180deg, #ffffff 0%, #f4edd9 100%);
   border: 1px solid rgba(52, 79, 31, 0.2);
@@ -190,6 +312,19 @@
   cursor: pointer;
 }
 
+.dark .skeuo-btn-outline {
+  background: linear-gradient(180deg, #5b554b 0%, #4c463d 100%);
+  border: 1px solid rgba(226, 223, 208, 0.18);
+  border-top-color: rgba(226, 223, 208, 0.35);
+  color: #E2DFD0;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+  box-shadow:
+    inset 0 1px 0 0 rgba(226, 223, 208, 0.16),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.35),
+    0 2px 5px 0 rgba(0, 0, 0, 0.3),
+    0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
 .skeuo-btn-outline:hover:not(:disabled) {
   background: linear-gradient(180deg, #ffffff 0%, #faeed7 100%);
   border-color: rgba(52, 79, 31, 0.3);
@@ -200,6 +335,15 @@
   transform: translateY(-1px);
 }
 
+.dark .skeuo-btn-outline:hover:not(:disabled) {
+  background: linear-gradient(180deg, #645e54 0%, #544e45 100%);
+  border-color: rgba(226, 223, 208, 0.3);
+  box-shadow:
+    inset 0 1px 0 0 rgba(226, 223, 208, 0.25),
+    0 4px 10px 0 rgba(0, 0, 0, 0.4),
+    0 1px 2px 0 rgba(0, 0, 0, 0.25);
+}
+
 .skeuo-btn-outline:active:not(:disabled) {
   background: linear-gradient(180deg, #e8ddc4 0%, #f4eed9 100%);
   box-shadow:
@@ -208,12 +352,19 @@
   transform: translateY(1.5px);
 }
 
+.dark .skeuo-btn-outline:active:not(:disabled) {
+  background: linear-gradient(180deg, #3d372e 0%, #4c463d 100%);
+  box-shadow:
+    inset 0 2px 4px 0 rgba(0, 0, 0, 0.5),
+    0 1px 0 0 rgba(226, 223, 208, 0.15);
+}
+
 .skeuo-btn-outline:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* Ghost Button with subtle press tactile feel */
+/* Ghost Button */
 .skeuo-btn-ghost {
   color: var(--color-primary);
   transition: all 0.12s ease-in-out;
@@ -227,10 +378,22 @@
     0 1px 3px 0 rgba(52, 79, 31, 0.05);
 }
 
+.dark .skeuo-btn-ghost:hover:not(:disabled) {
+  background: rgba(226, 223, 208, 0.1);
+  box-shadow:
+    inset 0 1px 0 0 rgba(226, 223, 208, 0.15),
+    0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
 .skeuo-btn-ghost:active:not(:disabled) {
   background: rgba(52, 79, 31, 0.08);
   box-shadow: inset 0 2px 4px 0 rgba(52, 79, 31, 0.1);
   transform: translateY(1px);
+}
+
+.dark .skeuo-btn-ghost:active:not(:disabled) {
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.4);
 }
 
 /* Debossed Physical Input Field */
@@ -247,10 +410,21 @@
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
+.dark .skeuo-input {
+  background: linear-gradient(180deg, #3d372e 0%, #464036 100%);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-top-color: rgba(0, 0, 0, 0.8);
+  border-bottom-color: rgba(226, 223, 208, 0.18);
+  box-shadow:
+    inset 0 2px 5px 0 rgba(0, 0, 0, 0.65),
+    inset 0 1px 2px 0 rgba(0, 0, 0, 0.4),
+    0 1px 0 0 rgba(226, 223, 208, 0.1);
+  color: #E2DFD0;
+}
+
 .skeuo-input:focus {
   background: #ffffff;
-  border-color: #f4991a;
-  border-top-color: #db840e;
+  border-color: var(--color-accent);
   box-shadow:
     inset 0 2px 4px 0 rgba(244, 153, 26, 0.12),
     0 0 0 3px rgba(244, 153, 26, 0.25),
@@ -258,9 +432,17 @@
   outline: none;
 }
 
+.dark .skeuo-input:focus {
+  background: #4a4339;
+  border-color: #F97300;
+  box-shadow:
+    inset 0 2px 4px 0 rgba(249, 115, 0, 0.15),
+    0 0 0 3px rgba(249, 115, 0, 0.3),
+    0 1px 0 0 rgba(226, 223, 208, 0.15);
+}
+
 .skeuo-input-error {
-  border-color: #f4991a !important;
-  border-top-color: #c97507 !important;
+  border-color: var(--color-accent) !important;
   box-shadow:
     inset 0 2px 4px 0 rgba(244, 153, 26, 0.2),
     0 0 0 2px rgba(244, 153, 26, 0.3) !important;
@@ -276,6 +458,15 @@
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
+.dark .skeuo-badge {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.3),
+    0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(226, 223, 208, 0.15);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
 /* Stamped Emblem / Medallion (e.g. Logo 'M') */
 .skeuo-medallion {
   background: linear-gradient(145deg, #3f5f26 0%, #344f1f 60%, #243715 100%);
@@ -288,6 +479,17 @@
     0 1px 2px 0 rgba(52, 79, 31, 0.15);
 }
 
+.dark .skeuo-medallion {
+  background: linear-gradient(145deg, #4d1549 0%, #32012F 60%, #1f001d 100%);
+  border: 1px solid #1f001d;
+  border-top-color: #7b2a75;
+  box-shadow:
+    inset 0 1px 0 0 rgba(226, 223, 208, 0.3),
+    inset 0 -2px 0 0 rgba(0, 0, 0, 0.8),
+    0 4px 10px 0 rgba(0, 0, 0, 0.5),
+    0 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
 /* Physical Grooves & Separators */
 .skeuo-groove-h {
   height: 2px;
@@ -295,10 +497,20 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.85);
 }
 
+.dark .skeuo-groove-h {
+  border-top: 1px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(226, 223, 208, 0.12);
+}
+
 .skeuo-groove-v {
   width: 2px;
   border-left: 1px solid rgba(52, 79, 31, 0.12);
   border-right: 1px solid rgba(255, 255, 255, 0.85);
+}
+
+.dark .skeuo-groove-v {
+  border-left: 1px solid rgba(0, 0, 0, 0.5);
+  border-right: 1px solid rgba(226, 223, 208, 0.12);
 }
 
 /* Tactile Chronometer Gauge Face Bezel */
@@ -312,6 +524,16 @@
     0 2px 4px 0 rgba(52, 79, 31, 0.08);
 }
 
+.dark .skeuo-gauge-bezel {
+  background: linear-gradient(145deg, #5c554b 0%, #464037 100%);
+  border: 2px solid rgba(226, 223, 208, 0.2);
+  box-shadow:
+    0 1px 0 0 rgba(226, 223, 208, 0.2) inset,
+    0 -2px 0 0 rgba(0, 0, 0, 0.5) inset,
+    0 6px 18px -2px rgba(0, 0, 0, 0.6),
+    0 2px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
 .skeuo-gauge-inner {
   background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f4ecda 70%, #e9dec3 100%);
   box-shadow:
@@ -319,4 +541,13 @@
     inset 0 1px 2px 0 rgba(52, 79, 31, 0.1),
     0 1px 0 0 rgba(255, 255, 255, 0.9);
 }
+
+.dark .skeuo-gauge-inner {
+  background: radial-gradient(circle at 50% 40%, #484239 0%, #3a352d 70%, #302a23 100%);
+  box-shadow:
+    inset 0 3px 6px 0 rgba(0, 0, 0, 0.65),
+    inset 0 1px 2px 0 rgba(0, 0, 0, 0.4),
+    0 1px 0 0 rgba(226, 223, 208, 0.12);
+}
+
 

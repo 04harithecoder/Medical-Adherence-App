@@ -3,10 +3,10 @@ import { NavLink } from 'react-router-dom'
 export default function Sidebar({ items, footer }) {
   return (
     <aside
-      className="hidden w-64 shrink-0 flex-col bg-gradient-to-b from-[#faf6ee] to-[#f0e7cf] px-4 py-6 md:flex relative"
+      className="hidden w-64 shrink-0 flex-col bg-surface px-4 py-6 md:flex relative transition-colors duration-200"
       style={{
         borderRight: '1px solid rgba(52, 79, 31, 0.14)',
-        boxShadow: 'inset -1px 0 0 rgba(255, 255, 255, 0.8), 2px 0 12px rgba(52, 79, 31, 0.04)',
+        boxShadow: 'inset -1px 0 0 rgba(255, 255, 255, 0.2), 2px 0 12px rgba(0, 0, 0, 0.05)',
       }}
     >
       <div className="mb-8 flex items-center gap-3 px-2">
@@ -16,7 +16,7 @@ export default function Sidebar({ items, footer }) {
         <div>
           <p
             className="font-display text-lg font-bold leading-none text-primary"
-            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.9)' }}
+            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.4)' }}
           >
             MEDAI
           </p>
@@ -37,7 +37,7 @@ export default function Sidebar({ items, footer }) {
               ${
                 isActive
                   ? 'skeuo-btn-secondary !text-white font-bold'
-                  : 'text-primary/75 hover:bg-white/60 hover:text-primary hover:shadow-xs active:translate-y-0.5'
+                  : 'text-primary/75 hover:bg-primary/10 hover:text-primary hover:shadow-xs active:translate-y-0.5'
               }`
             }
           >
@@ -58,4 +58,5 @@ export default function Sidebar({ items, footer }) {
     </aside>
   )
 }
+
 
