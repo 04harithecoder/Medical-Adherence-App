@@ -111,18 +111,6 @@ The platform provides a unified backend for patient profiles, caregiver-patient 
 
 ---
 
-## 🌟 Open Source Participation
-
-| Program | Program Name | Start Date | End Date |
-|:---:|:---|:---:|:---:|
-| <img src="https://img.shields.io/badge/SSoC-2025-ec4899?style=for-the-badge&logo=open-source-initiative&logoColor=white" width="130" /> | **Social Summer of Code (SSoC)** | `25 June 2025` | `25 August 2025` |
-| <img src="https://img.shields.io/badge/SWoC-2026-6366f1?style=for-the-badge&logo=codeforces&logoColor=white" width="130" /> | **Social Winter of Code (SWoC)** | `1 Jan 2026` | `1 March 2026` |
-| <img src="https://img.shields.io/badge/APERTRE-3.0-0ea5e9?style=for-the-badge&logo=gitbook&logoColor=white" width="130" /> | **Apertre 3.0** | `1 Feb 2026` | `1 March 2026` |
-
-Want to contribute? Read the [Contributing Guidelines](#contributing-guide) for detailed instructions.
-
----
-
 ## Setup Guide
 
 ### 1. Clone & Setup Virtual Environment
