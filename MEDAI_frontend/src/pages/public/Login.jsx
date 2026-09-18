@@ -7,19 +7,11 @@ import Button from '../../components/common/Button'
 import Card from '../../components/common/Card'
 import ThemeSwitch from '../../components/common/ThemeSwitch'
 
-// Only show preview mode when no real API URL is configured, or explicitly enabled.
-const SHOW_DEV_PREVIEW = import.meta.env.DEV
-
 export default function Login() {
-  const { login, devPreviewLogin } = useAuth()
+  const { login } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [serverError, setServerError] = useState('')
-
-  const handlePreview = (role) => {
-    const previewUser = devPreviewLogin(role)
-    navigate(`/${previewUser.role}/dashboard`, { replace: true })
-  }
 
   const {
     register,
@@ -97,29 +89,6 @@ export default function Login() {
             Create an account
           </Link>
         </p>
-
-        {SHOW_DEV_PREVIEW && (
-          <div className="mt-6 pt-5">
-            <div className="skeuo-groove-h mb-4" />
-            <p
-              className="mb-3 text-center text-[10px] font-bold uppercase tracking-wider text-primary/50"
-              style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.8)' }}
-            >
-              Dev preview (no backend yet)
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <Button variant="outline" className="px-2 py-1.5 text-xs font-bold" onClick={() => handlePreview('patient')}>
-                Patient
-              </Button>
-              <Button variant="outline" className="px-2 py-1.5 text-xs font-bold" onClick={() => handlePreview('caregiver')}>
-                Caregiver
-              </Button>
-              <Button variant="outline" className="px-2 py-1.5 text-xs font-bold" onClick={() => handlePreview('admin')}>
-                Admin
-              </Button>
-            </div>
-          </div>
-        )}
       </Card>
     </div>
   )

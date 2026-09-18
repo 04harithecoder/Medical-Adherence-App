@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Base URL comes from env so it can point at localhost in dev and the
 // deployed Render URL in production. Set VITE_API_BASE_URL in .env.
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
 
 const api = axios.create({
   baseURL,
@@ -27,6 +27,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('medai_token')
+      localStorage.removeItem('medai_refresh_token')
       localStorage.removeItem('medai_user')
       if (window.location.pathname !== '/login') {
         window.location.assign('/login')
