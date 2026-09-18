@@ -119,6 +119,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Our API spec uses no trailing slashes (e.g. /api/medications, not
+# /api/medications/). Django's default APPEND_SLASH redirect can't
+# preserve POST/PUT data on redirect, so we turn it off and make sure
+# every urlpattern matches the exact path instead.
+APPEND_SLASH = False
+
 # ---------------------------------------------------------------------------
 # CORS — allow the Vite dev server (and prod frontend, via env) to call the API
 # ---------------------------------------------------------------------------
