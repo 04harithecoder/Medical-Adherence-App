@@ -1,11 +1,11 @@
 <div align="center">
 
-  <img src="banner.svg" alt="MEDAI Backend Banner" width="100%" />
+  <img src="Banner Medai.jpg" alt="MEDAI Backend Banner" width="100%" />
 
   <br />
 
   <p align="center">
-    <strong>✨ Intelligent Medical Adherence & Caregiver Monitoring Engine ✨</strong>
+    <strong>✨ An Intelligent Medication Adherence Monitoring System ✨</strong>
   </p>
 
   <p align="center">
@@ -32,7 +32,7 @@
 
 ## About
 
-**MEDAI Backend** is the core healthcare infrastructure and intelligent API engine powering the **MEDAI Medical Adherence Ecosystem**. Engineered with **Django 6.1**, **Django REST Framework (DRF)**, and **Simple JWT**, it bridges the critical gap between prescribed medical routines and everyday patient adherence.
+**MEDAI (Medication Engagement & Dose Adherence Intelligence)** is the core healthcare infrastructure and intelligent API engine powering the **MEDAI Medical Adherence Ecosystem**. Engineered with **Django 6.1**, **Django REST Framework (DRF)**, and **Simple JWT**, it bridges the critical gap between prescribed medical routines and everyday patient adherence.
 
 The platform provides a unified backend for patient profiles, caregiver-patient links, customized medication routines, and granular daily dose tracking. Supported by an analytical risk scoring engine, MEDAI continuously evaluates patient consistency, calculates risk categories (`low`, `moderate`, `high`), and triggers automated escalations to linked caregivers whenever critical doses are missed.
 
