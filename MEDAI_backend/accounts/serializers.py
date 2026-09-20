@@ -87,3 +87,63 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('This account has been deactivated.')
         attrs['user'] = user
         return attrs
+
+
+class ProfileSerializer(serializers.Serializer):
+    """
+    Full profile view/edit — merges User fields with the role-specific
+    Patient/Caregiver fields into one flat shape for the frontend.
+    """
+    id = serializers.IntegerField(read_only=True)
+    full_name = serializers.CharField(max_length=120, required=False)
+    email = serializers.EmailField(read_only=True)
+    role = serializers.CharField(read_only=True)
+    phone = serializers.CharField(max_length=20, required=False, allow_blank=True, allow_null=True)
+    created_at = serializers.DateTimeField(read_only=True)
+
+    # Patient-only
+    date_of_birth = serializers.DateField(required=False, allow_null=True)
+    gender = serializers.ChoiceField(
+        choices=['male', 'female', 'other', 'unspecified'], required=False
+    )
+
+    # Caregiver-only
+    relationship_type = serializers.CharField(max_length=50, required=False, allow_blank=True, allow_null=True)
+
+    def to_representation(self, user):
+        data = {
+            'id': user.id,
+            'full_name': user.full_name,
+            'email': user.email,
+            'role': user.role,
+            'phone': user.phone,
+            'created_at': user.created_at,
+        }
+        if user.role == 'patient' and hasattr(user, 'patient_profile'):
+            data['date_of_birth'] = user.patient_profile.date_of_birth
+            data['gender'] = user.patient_profile.gender
+        if user.role == 'caregiver' and hasattr(user, 'caregiver_profile'):
+            data['relationship_type'] = user.caregiver_profile.relationship_type
+        return data
+
+    def update(self, user, validated_data):
+        if 'full_name' in validated_data:
+            user.full_name = validated_data['full_name']
+        if 'phone' in validated_data:
+            user.phone = validated_data['phone']
+        user.save()
+
+        if user.role == 'patient' and hasattr(user, 'patient_profile'):
+            patient = user.patient_profile
+            if 'date_of_birth' in validated_data:
+                patient.date_of_birth = validated_data['date_of_birth']
+            if 'gender' in validated_data:
+                patient.gender = validated_data['gender']
+            patient.save()
+        elif user.role == 'caregiver' and hasattr(user, 'caregiver_profile'):
+            caregiver = user.caregiver_profile
+            if 'relationship_type' in validated_data:
+                caregiver.relationship_type = validated_data['relationship_type']
+            caregiver.save()
+
+        return user

@@ -6,6 +6,7 @@ Django + DRF + Simple JWT backend for MEDAI.
 - **Phase 3**: Project setup, full schema as Django models, JWT auth (register/login/me/refresh)
 - **Phase 5**: Medication management + dose tracking APIs
 - **Phase 6**: Adherence analytics, trends, medication-wise breakdown, rule-based pattern detection, Adherence Pattern Risk
+- **Phase 6.5**: Full profile view/edit + caregiver-patient linking (request/approve/reject)
 
 ## Setup
 
@@ -66,6 +67,24 @@ All thresholds (what counts as HIGH risk, what counts as a "repeated evening
 miss", etc.) live in one dict at the top of `analytics/services.py` —
 tune them there. Everything is plain rule-based arithmetic, no ML, per
 the Phase 1 spec.
+
+### Profile (Phase 6.5)
+| Method | Endpoint | Notes |
+|---|---|---|
+| GET | `/api/auth/me` | Now returns role-specific fields too (date_of_birth/gender for patients, relationship_type for caregivers) |
+| PATCH | `/api/auth/me` | Update full_name, phone, and role-specific fields |
+
+### Caregiver-Patient Linking (Phase 6.5)
+| Method | Endpoint | Role | Notes |
+|---|---|---|---|
+| POST | `/api/caregiver/link-requests` | Caregiver | Body: `{patient_email}` — creates a pending link |
+| GET | `/api/caregiver/patients` | Caregiver | Only patients with an **active** link; includes live adherence % + risk level |
+| GET | `/api/patient/link-requests` | Patient | Pending caregiver requests awaiting approval |
+| POST | `/api/patient/link-requests/:id/approve` | Patient | Activates the link |
+| POST | `/api/patient/link-requests/:id/reject` | Patient | Marks the link revoked |
+
+A caregiver never sees any patient data until that patient explicitly
+approves the link — enforced by only querying `status='active'` links.
 
 ## App structure
 - `accounts` — User, Patient, Caregiver, CaregiverPatientLink

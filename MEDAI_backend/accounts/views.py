@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from medai_backend.responses import success, error
 
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, ProfileSerializer
 
 
 def _tokens_for(user):
@@ -42,7 +42,13 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return success(UserSerializer(request.user).data)
+        return success(ProfileSerializer(request.user).data)
+
+    def patch(self, request):
+        serializer = ProfileSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return success(ProfileSerializer(user).data, message='Profile updated.')
 
 
 class RefreshView(APIView):
