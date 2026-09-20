@@ -5,6 +5,7 @@ Django + DRF + Simple JWT backend for MEDAI.
 ## Phases delivered
 - **Phase 3**: Project setup, full schema as Django models, JWT auth (register/login/me/refresh)
 - **Phase 5**: Medication management + dose tracking APIs
+- **Phase 6**: Adherence analytics, trends, medication-wise breakdown, rule-based pattern detection, Adherence Pattern Risk
 
 ## Setup
 
@@ -51,6 +52,20 @@ Set `DB_ENGINE=sqlite` in `.env` instead of `mysql` for zero-setup local testing
 
 All patient-scoped endpoints only ever return/modify the logged-in patient's own data
 (enforced in `accounts/permissions.py` + queryset filtering by `request.user`).
+
+### Adherence (Phase 6)
+| Method | Endpoint | Notes |
+|---|---|---|
+| GET | `/api/adherence/summary?period=weekly` | `period`: daily / weekly / monthly |
+| GET | `/api/adherence/trends?period=weekly` | Daily adherence-% points, feeds the line chart |
+| GET | `/api/adherence/medication-wise` | Per-medication adherence %, last 30 days |
+| GET | `/api/adherence/patterns` | Rule-based behavioral patterns (see `analytics/services.py`) |
+| GET | `/api/adherence/risk` | `{risk_level, label: "Adherence Pattern Risk", missed_count, period_days}` |
+
+All thresholds (what counts as HIGH risk, what counts as a "repeated evening
+miss", etc.) live in one dict at the top of `analytics/services.py` —
+tune them there. Everything is plain rule-based arithmetic, no ML, per
+the Phase 1 spec.
 
 ## App structure
 - `accounts` — User, Patient, Caregiver, CaregiverPatientLink

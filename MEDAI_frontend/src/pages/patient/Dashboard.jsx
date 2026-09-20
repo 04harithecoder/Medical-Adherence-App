@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { doseService } from '../../services/doseService'
+import { adherenceService } from '../../services/adherenceService'
 import Card from '../../components/common/Card'
 import Button from '../../components/common/Button'
 import Badge from '../../components/common/Badge'
@@ -12,16 +13,21 @@ import UpcomingDoseCard from '../../components/dashboard/UpcomingDoseCard'
 
 export default function PatientDashboard() {
   const [doses, setDoses] = useState([])
+  const [risk, setRisk] = useState(null)
+  const [patterns, setPatterns] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [actingId, setActingId] = useState(null)
 
   const load = () => {
     setLoading(true)
-    doseService
-      .today()
-      .then(setDoses)
-      .catch(() => setError('Could not load today’s doses.'))
+    Promise.all([doseService.today(), adherenceService.risk(), adherenceService.patterns()])
+      .then(([doseData, riskData, patternData]) => {
+        setDoses(doseData)
+        setRisk(riskData)
+        setPatterns(patternData)
+      })
+      .catch(() => setError('Could not load your dashboard.'))
       .finally(() => setLoading(false))
   }
 
@@ -32,6 +38,9 @@ export default function PatientDashboard() {
     try {
       const updated = action === 'taken' ? await doseService.markTaken(dose.id) : await doseService.markMissed(dose.id)
       setDoses((prev) => prev.map((d) => (d.id === dose.id ? updated : d)))
+      // A dose change can shift the risk level / detected patterns too.
+      adherenceService.risk().then(setRisk).catch(() => {})
+      adherenceService.patterns().then(setPatterns).catch(() => {})
     } catch {
       setError('Could not update that dose.')
     } finally {
@@ -42,8 +51,6 @@ export default function PatientDashboard() {
   const taken = doses.filter((d) => d.status === 'taken').length
   const missed = doses.filter((d) => d.status === 'missed').length
   const adherence = doses.length > 0 ? Math.round((taken / doses.length) * 100) : 0
-  const riskLabel = missed >= 2 ? 'High risk' : missed === 1 ? 'Moderate risk' : 'Low risk'
-  const riskVariant = missed >= 2 ? 'high' : missed === 1 ? 'moderate' : 'low'
 
   if (loading) {
     return <div className="flex justify-center py-16"><Spinner label="Loading your dashboard…" /></div>
@@ -72,15 +79,19 @@ export default function PatientDashboard() {
             <StatCard label="Doses taken today" value={taken} hint={`of ${doses.length} scheduled`} />
             <StatCard label="Doses missed today" value={missed} hint="Keep it at zero" />
             <Card className="flex flex-col gap-1">
-              <p className="text-sm font-medium text-primary/60">Adherence status</p>
-              <Badge variant={riskVariant} className="self-start text-sm">{riskLabel}</Badge>
-              <p className="text-xs text-primary/50">Based on today's doses</p>
+              <p className="text-sm font-medium text-primary/60">Adherence Pattern Risk</p>
+              {risk && (
+                <>
+                  <Badge variant={risk.risk_level} className="self-start text-sm">{risk.risk_level} risk</Badge>
+                  <p className="text-xs text-primary/50">Based on the last {risk.period_days} days</p>
+                </>
+              )}
             </Card>
           </div>
 
-          <div>
-            <h3 className="mb-3 font-display text-lg text-primary">Today's medications</h3>
-            <div className="flex flex-col gap-3">
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="flex flex-col gap-3 md:col-span-2">
+              <h3 className="font-display text-lg text-primary">Today's medications</h3>
               {doses.map((dose) => (
                 <UpcomingDoseCard
                   key={dose.id}
@@ -95,6 +106,20 @@ export default function PatientDashboard() {
                   onMarkMissed={() => act(dose, 'missed')}
                 />
               ))}
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <h3 className="font-display text-lg text-primary">Recent alerts</h3>
+              {patterns.length === 0 ? (
+                <Card className="text-sm text-primary/50">No alerts right now.</Card>
+              ) : (
+                patterns.slice(0, 3).map((p, i) => (
+                  <Card key={i} className="flex items-start gap-2">
+                    <Badge variant="moderate">Pattern</Badge>
+                    <p className="text-sm text-primary/70">{p.message}</p>
+                  </Card>
+                ))
+              )}
             </div>
           </div>
         </>
