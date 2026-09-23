@@ -327,18 +327,6 @@ The client frontend is built with **React 19**, **Vite 6**, and **Tailwind CSS**
 
 ---
 
-## 🗺️ Project Milestones & Phase Matrix
-
-| Phase | Milestone | Deliverables | Status |
-|:---:|:---|:---|:---:|
-| <img src="https://img.shields.io/badge/Phase_1-Architecture-0284c7?style=for-the-badge" width="130" /> | **System Design & ER Spec** | Database normalization, API envelope standard, schema design | `Completed` ✅ |
-| <img src="https://img.shields.io/badge/Phase_2-Frontend_Core-ec4899?style=for-the-badge" width="130" /> | **Vite + React UI** | Patient & caregiver dashboard, Tailwind v4 UI, auth screens | `Completed` ✅ |
-| <img src="https://img.shields.io/badge/Phase_3-Auth_%26_Models-8b5cf6?style=for-the-badge" width="130" /> | **Django Core & JWT** | Custom email User model, 6 domain apps, Simple JWT auth pipeline | `Active` 🚀 |
-| <img src="https://img.shields.io/badge/Phase_4-Dose_Engine-10b981?style=for-the-badge" width="130" /> | **Medication & Dose APIs** | Routine scheduling, daily dose logs, action timestamp tracking | `In Progress` 🔄 |
-| <img src="https://img.shields.io/badge/Phase_5-AI_Analytics-f59e0b?style=for-the-badge" width="130" /> | **Analytics & Alert Triggers** | Adherence percentages, trend analysis, automated caregiver escalation | `Upcoming` 📅 |
-
----
-
 ## Contributing Guide
 
 Contributions make the open-source healthcare community an incredible place to learn, inspire, and create! Any contributions you make are **greatly appreciated**.
