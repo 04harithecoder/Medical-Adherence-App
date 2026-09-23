@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { notificationService } from '../../services/notificationService'
 import Button from '../common/Button'
 import ThemeSwitch from '../common/ThemeSwitch'
 import { Bell, Menu, X } from 'lucide-react'
@@ -15,7 +16,17 @@ function greeting() {
 export default function Topbar({ navItems = [] }) {
   const { user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
   const firstName = user?.full_name?.split(' ')[0]
+
+  useEffect(() => {
+    notificationService
+      .list()
+      .then((notifications) => setUnreadCount(notifications.filter((n) => !n.is_read).length))
+      .catch(() => {})
+  }, [])
+
+  const notificationsPath = navItems.find((item) => item.label === 'Notifications')?.to
 
   return (
     <header
@@ -44,13 +55,27 @@ export default function Topbar({ navItems = [] }) {
         <div className="flex items-center gap-4">
           <ThemeSwitch />
           
-          <button
-            type="button"
-            aria-label="Notifications"
-            className="skeuo-btn-outline flex h-9 w-9 items-center justify-center rounded-full text-primary/80 hover:text-primary"
-          >
-            <Bell className="h-4 w-4" />
-          </button>
+          {notificationsPath ? (
+            <Link
+              to={notificationsPath}
+              aria-label="Notifications"
+              className="skeuo-btn-outline relative flex h-9 w-9 items-center justify-center rounded-full text-primary/80 hover:text-primary"
+            >
+              <Bell className="h-4 w-4" />
+              {unreadCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </Link>
+          ) : (
+            <span
+              aria-label="Notifications"
+              className="skeuo-btn-outline flex h-9 w-9 items-center justify-center rounded-full text-primary/40"
+            >
+              <Bell className="h-4 w-4" />
+            </span>
+          )}
           <Button variant="outline" onClick={logout} className="hidden sm:inline-flex px-3.5 py-1.5 text-xs font-bold">
             Log out
           </Button>

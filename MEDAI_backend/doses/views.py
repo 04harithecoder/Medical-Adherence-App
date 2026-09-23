@@ -3,8 +3,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
 
 from accounts.permissions import IsPatientUser
+from alerts.services import check_and_create_alert
 from medai_backend.responses import success, error
 from medications.services import ensure_today_doses
+from notifications.models import Notification
 
 from .models import DoseRecord
 from .serializers import DoseRecordSerializer
@@ -69,3 +71,17 @@ class MarkDoseTakenView(_MarkDoseView):
 
 class MarkDoseMissedView(_MarkDoseView):
     target_status = 'missed'
+
+    def post(self, request, pk):
+        response = super().post(request, pk)
+        if response.status_code == 200:
+            dose = DoseRecord.objects.select_related('patient__user', 'medication').get(pk=pk)
+            Notification.objects.create(
+                user=dose.patient.user,
+                type='missed_dose',
+                title='Missed dose',
+                message=f'You missed {dose.medication.medicine_name} scheduled for {dose.scheduled_time.strftime("%I:%M %p")}.',
+                related_id=dose.id,
+            )
+            check_and_create_alert(dose.patient)
+        return response
