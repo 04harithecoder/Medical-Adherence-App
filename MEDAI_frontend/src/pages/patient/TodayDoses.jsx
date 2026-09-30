@@ -6,6 +6,8 @@ import Badge from '../../components/common/Badge'
 import EmptyState from '../../components/common/EmptyState'
 import Spinner from '../../components/common/Spinner'
 
+const HIGH_RISK_THRESHOLD = 0.5
+
 export default function TodayDoses() {
   const [doses, setDoses] = useState([])
   const [loading, setLoading] = useState(true)
@@ -55,7 +57,16 @@ export default function TodayDoses() {
           {doses.map((dose) => (
             <Card key={dose.id} className="flex items-center justify-between gap-4">
               <div>
-                <p className="font-semibold text-primary">{dose.medicine_name}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-semibold text-primary">{dose.medicine_name}</p>
+                  {dose.status === 'scheduled' &&
+                    typeof dose.predicted_miss_probability === 'number' &&
+                    dose.predicted_miss_probability >= HIGH_RISK_THRESHOLD && (
+                      <Badge variant="moderate" title="Predicted from your past adherence pattern">
+                        Often missed
+                      </Badge>
+                    )}
+                </div>
                 <p className="text-sm text-primary/60">{dose.dosage_description} · {dose.scheduled_time.slice(0, 5)}</p>
               </div>
 

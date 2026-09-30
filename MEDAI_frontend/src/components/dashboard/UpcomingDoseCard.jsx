@@ -3,8 +3,11 @@ import Badge from '../common/Badge'
 import Button from '../common/Button'
 import { Pill, Check } from 'lucide-react'
 
+const HIGH_RISK_THRESHOLD = 0.5
+
 export default function UpcomingDoseCard({ dose, onMarkTaken, onMarkMissed }) {
-  const { medicineName, dosage, time, status = 'scheduled' } = dose
+  const { medicineName, dosage, time, status = 'scheduled', predictedMissProbability } = dose
+  const isHighRisk = typeof predictedMissProbability === 'number' && predictedMissProbability >= HIGH_RISK_THRESHOLD
 
   return (
     <Card className="flex items-center justify-between gap-4 transition-transform hover:-translate-y-0.5">
@@ -13,12 +16,19 @@ export default function UpcomingDoseCard({ dose, onMarkTaken, onMarkMissed }) {
           <Pill className="h-5 w-5 stroke-[2]" />
         </div>
         <div>
-          <p
-            className="font-display text-base font-bold text-primary"
-            style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.8)' }}
-          >
-            {medicineName}
-          </p>
+          <div className="flex items-center gap-2">
+            <p
+              className="font-display text-base font-bold text-primary"
+              style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.8)' }}
+            >
+              {medicineName}
+            </p>
+            {isHighRisk && status === 'scheduled' && (
+              <Badge variant="moderate" title="Predicted from your past adherence pattern">
+                Often missed
+              </Badge>
+            )}
+          </div>
           <p className="text-xs font-semibold text-primary/60" style={{ textShadow: '0 1px 0 rgba(255, 255, 255, 0.6)' }}>
             {dosage} · <span className="font-bold text-primary/80">{time}</span>
           </p>

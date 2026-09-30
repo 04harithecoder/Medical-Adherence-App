@@ -8,6 +8,7 @@ Django + DRF + Simple JWT backend for MEDAI.
 - **Phase 6**: Adherence analytics, trends, medication-wise breakdown, rule-based pattern detection, Adherence Pattern Risk
 - **Phase 6.5**: Full profile view/edit + caregiver-patient linking (request/approve/reject)
 - **Phase 7**: Smart reminders, notifications, and caregiver alerts
+- **Phase 8**: Optional ML layer — missed-dose probability prediction (Logistic Regression)
 
 ## Setup
 
@@ -121,6 +122,43 @@ Windows Task Scheduler. It's idempotent — running it often is safe, it
 checks `related_id` before creating anything so it never duplicates a
 reminder for the same dose. Tunable window sizes are constants at the
 top of `notifications/management/commands/generate_reminders.py`.
+
+### Optional ML layer (Phase 8)
+
+Predicts the probability that a specific upcoming dose will be missed,
+using a **Logistic Regression** model (`scikit-learn`). This sits
+**alongside**, not instead of, the Phase 6 rule-based Adherence Pattern
+Risk — per the Phase 1 brief's "no fake AI" rule, both stay active and
+independent.
+
+```bash
+python manage.py train_adherence_model
+```
+
+- Trains on every `DoseRecord` across all patients (pooled — a single
+  patient's history alone is too small to train on). Each patient's own
+  tendency is still captured via a `patient_prior_miss_rate` feature.
+- **Every feature is causal** — it only ever looks at dose history
+  strictly *before* the dose being scored, so there's no data leakage
+  at training time.
+- Needs at least 20 labeled (taken/missed) dose records to train at
+  all; below that it skips and logs why, rather than saving a model
+  that's just guessing. Predictions stay `null` until then.
+- Prints real held-out test accuracy + ROC-AUC every time you run it —
+  these aren't fabricated numbers.
+- Re-run it periodically as more real usage data accumulates (a cron
+  job alongside `generate_reminders` works well, e.g. nightly).
+
+Once trained, `GET /api/doses/today` includes a `predicted_miss_probability`
+field (0–1, or `null` if untrained/not applicable) on each scheduled dose.
+`generate_reminders` also uses it: a dose predicted ≥50% likely to be
+missed gets a wider reminder window (90 min instead of 30) with a
+"you often miss this one" message — the personalized reminder timing
+described in the Phase 1 brief.
+
+The trained model file (`analytics/ml_model.joblib`) is gitignored — it's
+a generated artifact, not source code. Run the training command yourself
+after migrating.
 
 ## App structure
 - `accounts` — User, Patient, Caregiver, CaregiverPatientLink

@@ -101,6 +101,7 @@ export default function PatientDashboard() {
                     dosage: dose.dosage_description,
                     time: dose.scheduled_time.slice(0, 5),
                     status: dose.status,
+                    predictedMissProbability: dose.predicted_miss_probability,
                   }}
                   onMarkTaken={() => act(dose, 'taken')}
                   onMarkMissed={() => act(dose, 'missed')}
