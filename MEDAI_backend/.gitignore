@@ -5,3 +5,4 @@ db.sqlite3
 .env
 staticfiles/
 analytics/ml_model.joblib
+ca.pem
